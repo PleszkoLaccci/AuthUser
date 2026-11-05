@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Nov 05. 11:21
+-- Létrehozás ideje: 2026. Nov 05. 11:28
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.0.30
 
@@ -35,6 +35,15 @@ CREATE TABLE `roles` (
   `RegTime` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- A tábla adatainak kiíratása `roles`
+--
+
+INSERT INTO `roles` (`Id`, `Name`, `RegTime`) VALUES
+('61279793-2eeb-412d-bb98-90c9148350c7', 'tanulo', '2026-11-05 11:25:31'),
+('74742a09-cd33-46a5-83a4-fac3bdb42f44', 'admin', '2026-11-05 11:25:24'),
+('83bdc951-3b27-454c-afe4-c54a9f8c2e59', 'tanar', '2026-11-05 11:25:39');
+
 -- --------------------------------------------------------
 
 --
@@ -65,7 +74,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `Name`, `Email`, `Password`, `RegTime`) VALUES
-('11bb9bdf-727e-469d-b21f-82198f9932f6', 'buziengi', 'larperengi@gmail.com', 'melegvagyok', '2026-11-05 10:38:06');
+('019de952-a155-4359-af6c-880864327b3c', 'BosskingPleszko Laszlo', 'boss@gmail.com', 'sajt32', '2026-11-05 11:27:19'),
+('4dfab9dd-ba99-4ac6-b0cd-b46b2627a0ec', 'kaksi zoltan zalan', 'larpingkaksi@gmail.com', 'kakamvagy', '2026-11-05 11:26:48'),
+('ad66de40-2b34-4868-a7c1-e333dc72d792', 'Enger milian', 'larp@gmail.com', 'melegv', '2026-11-05 11:27:02');
 
 --
 -- Indexek a kiírt táblákhoz
