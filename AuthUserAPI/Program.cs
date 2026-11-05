@@ -10,7 +10,8 @@ namespace AuthUserAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<AuthUserContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("Mysql")));
+            builder.Services.AddDbContext<AuthUserContext>(options => 
+            options.UseMySQL(builder.Configuration.GetConnectionString("Mysql")));
 
             // Add services to the container.
 
