@@ -202,5 +202,21 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthUserAPI.Controllers.UserToRoleController",
+    "Method": "RemoveRoleFromUser",
+    "RelativePath": "api/UserToRole/RemoveRoleFromUser",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addRolesToUserDTO",
+        "Type": "AuthUserAPI.Models.DTOS.AddRolesToUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

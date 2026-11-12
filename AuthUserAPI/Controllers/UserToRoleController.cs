@@ -2,6 +2,7 @@
 using AuthUserAPI.Models.DTOS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthUserAPI.Controllers
 {
@@ -19,22 +20,67 @@ namespace AuthUserAPI.Controllers
         [HttpPut("AddRoleToUser")]
         public async Task<IActionResult> AddRoleToUser([FromQuery] Guid userId, [FromQuery] Guid roleId, AddRolesToUserDTO addRolesToUserDTO)
         {
-            var user = await usertorolebazis.Users.FindAsync(userId);
-            var role = await usertorolebazis.Roles.FindAsync(roleId);
-            if (user == null || role == null)
+            try
             {
-                return StatusCode(404, new
+              var user = await usertorolebazis.Users.Include(u => u.Roles)
+              .SingleOrDefaultAsync(u => u.Id == addRolesToUserDTO.UserId);
+                var roles = await usertorolebazis.Roles.FindAsync(addRolesToUserDTO.RolesId);
+
+                if (user == null || roles == null)
                 {
-                    message = "A felhasználó vagy a szerepkör nem található!"
+                    return NotFound(new
+                    {
+                        message = "A felhasználó vagy a szerepkör nem található!"
+                    });
+                }
+
+                user.Roles.Add(roles);
+                await usertorolebazis.SaveChangesAsync();
+                return StatusCode(200, new
+                {
+                    message = "Sikeres hozzárendelés!"
                 });
             }
-            Role.Id = role.Id;
-            await usertorolebazis.SaveChangesAsync();
-            return StatusCode(200, new
+            catch (Exception exception)
             {
-                message = "Sikeres hozzárendelés!"
-            });
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a hozzárendelés során!",
+                    error = exception.Message
+                });
+            }
         }
 
+        [HttpDelete("RemoveRoleFromUser")]
+        public async Task<IActionResult> RemoveRoleFromUser([FromBody] AddRolesToUserDTO addRolesToUserDTO)
+        {
+            try
+            {
+                var user = await usertorolebazis.Users.Include(u => u.Roles)
+              .SingleOrDefaultAsync(u => u.Id == addRolesToUserDTO.UserId);
+                var roles = await usertorolebazis.Roles.FindAsync(addRolesToUserDTO.RolesId);
+                if (user == null || roles == null)
+                {
+                    return StatusCode(404, new
+                    {
+                        message = "A felhasználó evvel a szerepkörrel nem található!"
+                    });
+                }
+                user.Roles.Remove(roles);
+                await usertorolebazis.SaveChangesAsync();
+                return StatusCode(200, new
+                {
+                    message = "Sikeres eltávolítás!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a hozzárendelés során!",
+                    error = exception.Message
+                });
+            }
+        }
     }
 }
