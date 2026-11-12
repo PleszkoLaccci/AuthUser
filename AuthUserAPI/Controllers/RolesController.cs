@@ -58,41 +58,66 @@ namespace AuthUserAPI.Controllers
         [HttpGet("AllRoles")]
         public async Task<IActionResult> AllRoles()
         {
-            var roles = await rolesbazis.Roles.ToListAsync();
-            if (roles.Count == 0)
+            try
             {
-                return StatusCode(404, new
+                var roles = await rolesbazis.Roles.ToListAsync();
+                if (roles.Count == 0)
                 {
-                    message = "Nincs szerepkör az adatbázisban!"
+                    return StatusCode(404, new
+                    {
+                        message = "Nincs szerepkör az adatbázisban!"
+                    });
+                }
+                else
+                {
+                    return StatusCode(200, new
+                    {
+                        message = "Sikeres lekérdezés!",
+                        data = roles
+                    });
+                }
+            }
+            catch (Exception exception)
+            {
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a lekérdezés során!",
+                    error = exception.Message
                 });
             }
-            else
-            {
-                return StatusCode(200, new
-                {
-                    message = "Sikeres lekérdezés!",
-                    data = roles
-                });
-            }
+
+          
         }
 
         [HttpGet("ById")]
         public async Task<IActionResult> ById([FromQuery] Guid id)
         {
-            var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
-            if (role == null)
+            try
             {
-                return StatusCode(404, new
+                var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
+                if (role == null)
                 {
-                    message = "Nincs ilyen szerepkör az adatbázisban!"
-                });
+                    return StatusCode(404, new
+                    {
+                        message = "Nincs ilyen szerepkör az adatbázisban!"
+                    });
+                }
+                else
+                {
+                    return StatusCode(200, new
+                    {
+                        message = "Sikeres lekérdezés!",
+                        data = role
+                    });
+                }
             }
-            else
+            catch (Exception exception)
             {
-                return StatusCode(200, new
+
+                return StatusCode(400, new
                 {
-                    message = "Sikeres lekérdezés!",
-                    data = role
+                    message = "Hiba történt a lekérdezés során!",
+                    error = exception.Message
                 });
             }
         }
@@ -100,21 +125,32 @@ namespace AuthUserAPI.Controllers
         [HttpPut("UpdateRole")]
         public async Task<IActionResult> UpdateRole([FromQuery] Guid id, [FromBody] UpdateRoleDTO roleDto)
         {
-            var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
-            if (role == null)
+            try
             {
-                return StatusCode(404, new
+                var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
+                if (role == null)
                 {
-                    message = "Nincs ilyen szerepkör az adatbázisban!"
-                });
+                    return StatusCode(404, new
+                    {
+                        message = "Nincs ilyen szerepkör az adatbázisban!"
+                    });
+                }
+                else
+                {
+                    role.Name = roleDto.Name;
+                    await rolesbazis.SaveChangesAsync();
+                    return StatusCode(200, new
+                    {
+                        message = "Sikeres módosítás!"
+                    });
+                }
             }
-            else
+            catch (Exception exception)
             {
-                role.Name = roleDto.Name;
-                await rolesbazis.SaveChangesAsync();
-                return StatusCode(200, new
+                return StatusCode(400, new
                 {
-                    message = "Sikeres módosítás!"
+                    message = "Hiba történt a módosítás során!",
+                    error = exception.Message
                 });
             }
         }
@@ -122,24 +158,34 @@ namespace AuthUserAPI.Controllers
         [HttpDelete("DeleteRole")]
         public async Task<IActionResult> DeleteRole([FromQuery] Guid id)
         {
-            var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
-            if (role == null)
+            try
             {
-                return StatusCode(404, new
+                var role = await rolesbazis.Roles.FirstOrDefaultAsync(r => r.Id == id);
+                if (role == null)
                 {
-                    message = "Nincs ilyen szerepkör az adatbázisban!"
-                });
+                    return StatusCode(404, new
+                    {
+                        message = "Nincs ilyen szerepkör az adatbázisban!"
+                    });
+                }
+                else
+                {
+                    rolesbazis.Roles.Remove(role);
+                    await rolesbazis.SaveChangesAsync();
+                    return StatusCode(200, new
+                    {
+                        message = "Sikeres törlés!"
+                    });
+                }
             }
-            else
+            catch (Exception exception)
             {
-                rolesbazis.Roles.Remove(role);
-                await rolesbazis.SaveChangesAsync();
-                return StatusCode(200, new
+                return StatusCode(400, new
                 {
-                    message = "Sikeres törlés!"
+                    message = "Hiba történt a törlés során!",
+                    error = exception.Message
                 });
             }
         }
-
     }
 }
