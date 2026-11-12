@@ -176,5 +176,31 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AuthUserAPI.Controllers.UserToRoleController",
+    "Method": "AddRoleToUser",
+    "RelativePath": "api/UserToRole/AddRoleToUser",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "roleId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "addRolesToUserDTO",
+        "Type": "AuthUserAPI.Models.DTOS.AddRolesToUserDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

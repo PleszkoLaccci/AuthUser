@@ -19,27 +19,40 @@ namespace AuthUserAPI.Controllers
         [HttpPost("NewRole")]
         public async Task<IActionResult> NewRole([FromBody] AddNewRoleDTO roleDto)
         {
-            if (roleDto.Name == null)
+            try
             {
-                return StatusCode(404, new
+                if (roleDto.Name == null)
                 {
-                    message = "Kérem töltse ki az összes mezőt!"
+                    return StatusCode(404, new
+                    {
+                        message = "Kérem töltse ki az összes mezőt!"
+                    });
+                }
+                else
+                {
+                    var newrole = new Role()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = roleDto.Name,
+                    };
+                    await rolesbazis.Roles.AddAsync(newrole);
+                    await rolesbazis.SaveChangesAsync();
+                    return StatusCode(201, new
+                    {
+                        message = "Sikeres regisztráció!"
+                    });
+                }
+
+            }
+            catch (Exception exception)
+            {
+                return StatusCode(400, new
+                {
+                    message = "Hiba történt a regisztráció során!",
+                    error = exception.Message
                 });
             }
-            else
-            {
-                var newrole = new Role()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = roleDto.Name,
-                };
-                await rolesbazis.Roles.AddAsync(newrole);
-                await rolesbazis.SaveChangesAsync();
-                return StatusCode(201, new
-                {
-                    message = "Sikeres regisztráció!"
-                });
-            }
+
         }
 
         [HttpGet("AllRoles")]
